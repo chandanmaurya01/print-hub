@@ -1,0 +1,1988 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a26;
+    --surface3: #222233;
+    --border: #2a2a3d;
+    --border-hover: #3d3d5c;
+    --primary: #6c5ce7;
+    --primary-light: #a29bfe;
+    --primary-glow: rgba(108, 92, 231, 0.3);
+    --accent: #00cec9;
+    --success: #00b894;
+    --warning: #fdcb6e;
+    --danger: #e17055;
+    --text: #e8e8f0;
+    --text-dim: #8888a8;
+    --text-muted: #55556a;
+    --radius: 10px;
+    --radius-lg: 12px;
+    --shadow: 0 8px 24px rgba(0,0,0,0.35);
+
+    --preview-h: 82px;
+    --pad: 10px;
+    --gap: 10px;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  .irt-wrapper {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 10px;
+    line-height: 1.35;
+    font-size: 13px;
+    -webkit-touch-callout: none;
+  }
+
+  .irt-wrapper *,
+  .irt-wrapper *::before,
+  .irt-wrapper *::after {
+    box-sizing: border-box;
+  }
+
+  /* Header */
+  .irt-header {
+    text-align: center;
+    padding: 10px 8px 12px;
+    position: relative;
+  }
+
+  .irt-header::before {
+    content: '';
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 280px;
+    height: 180px;
+    background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .irt-header h1 {
+    font-size: 1.05rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--primary-light), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    position: relative;
+    z-index: 1;
+    margin-bottom: 2px;
+  }
+
+  .irt-header p {
+    color: var(--text-dim);
+    font-size: 0.7rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .irt-header .devby {
+    display: inline-block;
+    margin-top: 4px;
+    font-size: 0.66rem;
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+
+  /* Layout */
+  .irt-main {
+    max-width: 980px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 292px;
+    gap: var(--gap);
+    position: relative;
+    z-index: 1;
+    align-items: start;
+  }
+
+  @media (max-width: 860px) {
+    .irt-main {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (min-width: 861px) {
+    .irt-sidebar {
+      position: sticky;
+      top: 10px;
+    }
+  }
+
+  /* Cards */
+  .irt-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--pad);
+    transition: border-color 0.25s;
+  }
+
+  .irt-card:hover {
+    border-color: var(--border-hover);
+  }
+
+  .irt-card-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .irt-card-title .icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+  }
+
+  .irt-card-title .icon.purple { background: rgba(108,92,231,0.15); }
+  .irt-card-title .icon.teal { background: rgba(0,206,201,0.15); }
+  .irt-card-title .icon.green { background: rgba(0,184,148,0.15); }
+  .irt-card-title .icon.orange { background: rgba(225,112,85,0.15); }
+
+  /* Upload Zone */
+  .irt-upload-zone {
+    border: 1.5px dashed var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s;
+    background: var(--surface);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .irt-upload-zone:hover,
+  .irt-upload-zone.dragover {
+    border-color: var(--primary);
+    background: rgba(108,92,231,0.05);
+    box-shadow: 0 0 24px var(--primary-glow);
+  }
+
+  .irt-upload-zone .upload-icon {
+    font-size: 1.6rem;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .irt-upload-zone h3 {
+    font-size: 0.88rem;
+    font-weight: 600;
+    margin-bottom: 3px;
+  }
+
+  .irt-upload-zone p {
+    color: var(--text-dim);
+    font-size: 0.7rem;
+  }
+
+  .irt-upload-zone .formats {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .irt-upload-zone .fmt-badge {
+    background: var(--surface3);
+    color: var(--text-dim);
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+
+  .irt-upload-zone input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  /* Preview Area */
+  .irt-preview-area {
+    display: none;
+    margin-top: 10px;
+  }
+
+  .irt-preview-area.active {
+    display: block;
+  }
+
+  .irt-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  @media (max-width: 520px) {
+    .irt-preview-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .irt-preview-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 8px;
+    min-width: 0;
+  }
+
+  .preview-title {
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-muted);
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
+
+  .preview-img-wrap {
+    height: var(--preview-h);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.18);
+    border-radius: 7px;
+    overflow: hidden;
+  }
+
+  .preview-img-wrap img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+    user-select: none;
+    -webkit-user-drag: none;
+    pointer-events: none;
+  }
+
+  .preview-placeholder {
+    color: var(--text-muted);
+    font-size: 0.66rem;
+    padding: 8px;
+    text-align: center;
+  }
+
+  .preview-meta {
+    margin-top: 5px;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    word-break: break-word;
+  }
+
+  /* Stats line */
+  .irt-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+    margin-top: 8px;
+    font-size: 0.68rem;
+    color: var(--text-dim);
+  }
+
+  .irt-stats strong {
+    color: var(--text);
+    font-weight: 700;
+  }
+
+  /* Form Controls */
+  .irt-form-group {
+    margin-bottom: 10px;
+  }
+
+  .irt-form-group label {
+    display: block;
+    font-size: 0.66rem;
+    font-weight: 700;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+
+  .irt-mini-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .irt-mini-row label {
+    margin: 0;
+  }
+
+  .irt-input-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .irt-input-wrap {
+    flex: 1;
+    position: relative;
+    min-width: 0;
+  }
+
+  .irt-input-wrap.fixed-82 {
+    flex: 0 0 82px;
+  }
+
+  .irt-input-wrap input,
+  .irt-input-wrap select {
+    width: 100%;
+    padding: 7px 9px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .irt-input-wrap input:focus,
+  .irt-input-wrap select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px var(--primary-glow);
+  }
+
+  .irt-input-wrap .unit {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 0.62rem;
+    font-weight: 700;
+    pointer-events: none;
+  }
+
+  .irt-input-wrap input[type="number"] {
+    -moz-appearance: textfield;
+  }
+
+  .irt-input-wrap input[type="number"]::-webkit-inner-spin-button,
+  .irt-input-wrap input[type="number"]::-webkit-outer-spin-button {
+    opacity: 1;
+  }
+
+  .irt-convert {
+    margin-top: 6px;
+    font-size: 0.64rem;
+    color: var(--text-dim);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 6px 8px;
+    word-break: break-word;
+  }
+
+  /* Lock Button */
+  .irt-lock-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text-dim);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .irt-lock-btn.locked {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+    box-shadow: 0 0 10px var(--primary-glow);
+  }
+
+  .irt-lock-btn:hover {
+    border-color: var(--primary);
+  }
+
+  /* Target Size */
+  .irt-target-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .irt-target-row input {
+    flex: 1;
+  }
+
+  .irt-target-row select {
+    width: 64px;
+    flex-shrink: 0;
+  }
+
+  /* Buttons */
+  .irt-btn {
+    width: 100%;
+    padding: 9px 12px;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.76rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  .irt-btn-primary {
+    background: linear-gradient(135deg, var(--primary), #8b7cf7);
+    color: #fff;
+    box-shadow: 0 4px 14px var(--primary-glow);
+  }
+
+  .irt-btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px var(--primary-glow);
+  }
+
+  .irt-btn-primary:active {
+    transform: translateY(0);
+  }
+
+  .irt-btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .irt-btn-success {
+    background: linear-gradient(135deg, var(--success), #55efc4);
+    color: #000;
+    box-shadow: 0 4px 14px rgba(0,184,148,0.28);
+    margin-top: 8px;
+  }
+
+  .irt-btn-success:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(0,184,148,0.35);
+  }
+
+  .irt-btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    margin-top: 6px;
+    padding: 7px 10px;
+    font-size: 0.68rem;
+  }
+
+  .irt-btn-outline:hover {
+    border-color: var(--danger);
+    color: var(--danger);
+    background: rgba(225,112,85,0.05);
+  }
+
+  /* Progress */
+  .irt-progress-wrap {
+    display: none;
+    margin-top: 8px;
+  }
+
+  .irt-progress-wrap.active {
+    display: block;
+  }
+
+  .irt-progress-bar {
+    height: 4px;
+    background: var(--surface3);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .irt-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    border-radius: 6px;
+    width: 0%;
+    transition: width 0.25s;
+  }
+
+  .irt-progress-text {
+    font-size: 0.66rem;
+    color: var(--text-dim);
+    margin-top: 5px;
+    text-align: center;
+  }
+
+  /* Results */
+  .irt-results {
+    display: none;
+    margin-top: 10px;
+  }
+
+  .irt-results.active {
+    display: block;
+  }
+
+  .irt-comparison {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .irt-comp-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 8px;
+    text-align: center;
+  }
+
+  .irt-comp-box .comp-label {
+    font-size: 0.58rem;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .irt-comp-box .comp-value {
+    font-size: 0.95rem;
+    font-weight: 800;
+  }
+
+  .irt-comp-box .comp-sub {
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  .irt-comp-arrow {
+    font-size: 0.95rem;
+    color: var(--accent);
+  }
+
+  .irt-savings {
+    text-align: center;
+    margin-top: 8px;
+    padding: 8px;
+    background: rgba(0,184,148,0.08);
+    border: 1px solid rgba(0,184,148,0.18);
+    border-radius: var(--radius);
+  }
+
+  .irt-savings .pct {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--success);
+  }
+
+  .irt-savings .pct-label {
+    font-size: 0.64rem;
+    color: var(--text-dim);
+  }
+
+  /* Sidebar */
+  .irt-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+  }
+
+  /* Quality Slider */
+  .irt-slider-wrap {
+    position: relative;
+  }
+
+  .irt-slider-wrap input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    background: var(--surface3);
+    border-radius: 6px;
+    outline: none;
+  }
+
+  .irt-slider-wrap input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    background: var(--primary);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 8px var(--primary-glow);
+  }
+
+  .irt-slider-value {
+    text-align: right;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--primary-light);
+    margin-top: 4px;
+  }
+
+  /* Divider */
+  .irt-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 8px 0;
+  }
+
+  /* Toast */
+  .irt-toast {
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 9px 13px;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.76rem;
+    font-weight: 500;
+    box-shadow: var(--shadow);
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    max-width: calc(100vw - 32px);
+  }
+
+  .irt-toast.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .irt-toast.success { border-color: var(--success); }
+  .irt-toast.error { border-color: var(--danger); }
+
+  /* Responsive */
+  @media (max-width: 520px) {
+    .irt-header h1 { font-size: 0.95rem; }
+    .irt-comparison { grid-template-columns: 1fr; }
+    .irt-comp-arrow { transform: rotate(90deg); text-align: center; }
+  }
+
+  /* Scrollbar */
+  .irt-wrapper ::-webkit-scrollbar { width: 5px; height: 5px; }
+  .irt-wrapper ::-webkit-scrollbar-track { background: var(--surface); }
+  .irt-wrapper ::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 6px; }
+
+  /* Hidden canvas */
+  .irt-hidden { display: none !important; }
+</style>
+
+<div class="irt-wrapper">
+  <!-- Header -->
+  <div class="irt-header">
+    <h1>🖨️ Print Hub Pro</h1>
+    <p>Resize • Compress • PX / MM / INCH Tool</p>
+    <span class="devby">Developed by Chandan Mauray</span>
+  </div>
+
+  <div class="irt-main">
+    <!-- Left Column -->
+    <div class="irt-left">
+      <!-- Upload + Preview -->
+      <div class="irt-card" id="irtUploadCard">
+        <div class="irt-upload-zone" id="irtDropZone">
+          <span class="upload-icon">📁</span>
+          <h3>Drop image here or click to upload</h3>
+          <p>Max 50MB</p>
+          <div class="formats">
+            <span class="fmt-badge">JPG</span>
+            <span class="fmt-badge">JPEG</span>
+            <span class="fmt-badge">PNG</span>
+            <span class="fmt-badge">WebP</span>
+          </div>
+          <input type="file" id="irtFileInput" accept="image/jpeg,image/jpg,image/png,image/webp">
+        </div>
+
+        <!-- Preview Area -->
+        <div class="irt-preview-area" id="irtPreviewArea">
+          <div class="irt-preview-grid">
+            <div class="irt-preview-box">
+              <div class="preview-title">Original</div>
+              <div class="preview-img-wrap">
+                <img id="irtOriginalPreview" alt="Original preview">
+              </div>
+              <div class="preview-meta" id="irtOriginalMeta">—</div>
+            </div>
+
+            <div class="irt-preview-box">
+              <div class="preview-title">Resized</div>
+              <div class="preview-img-wrap">
+                <div class="preview-placeholder" id="irtResizedPlaceholder">
+                  Resize ke baad preview yahan aayega
+                </div>
+                <img id="irtResizedPreview" alt="Resized preview" style="display:none;">
+              </div>
+              <div class="preview-meta" id="irtResizedMeta">—</div>
+            </div>
+          </div>
+
+          <div class="irt-stats">
+            <span>Dim: <strong id="irtOrigDim">—</strong></span>
+            <span>MM: <strong id="irtOrigMm">—</strong></span>
+            <span>Inch: <strong id="irtOrigInch">—</strong></span>
+            <span>Size: <strong id="irtOrigSize">—</strong></span>
+            <span>Format: <strong id="irtOrigFormat">—</strong></span>
+            <span>DPI: <strong id="irtOrigDpi">—</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div class="irt-results" id="irtResults">
+        <div class="irt-card">
+          <div class="irt-card-title">
+            <span class="icon green">📊</span>
+            Before / After
+          </div>
+
+          <div class="irt-comparison">
+            <div class="irt-comp-box">
+              <div class="comp-label">Before</div>
+              <div class="comp-value" id="irtBeforeSize" style="color:var(--warning)">—</div>
+              <div class="comp-sub" id="irtBeforeDim">—</div>
+            </div>
+
+            <div class="irt-comp-arrow">→</div>
+
+            <div class="irt-comp-box">
+              <div class="comp-label">After</div>
+              <div class="comp-value" id="irtAfterSize" style="color:var(--success)">—</div>
+              <div class="comp-sub" id="irtAfterDim">—</div>
+            </div>
+          </div>
+
+          <div class="irt-savings">
+            <div class="pct" id="irtSavingsPct">0%</div>
+            <div class="pct-label">Size Reduction</div>
+          </div>
+
+          <button class="irt-btn irt-btn-success" id="irtDownloadBtn" onclick="irtDownload()">
+            ⬇️ Download
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Sidebar -->
+    <div class="irt-sidebar">
+      <div class="irt-card">
+        <div class="irt-card-title">
+          <span class="icon purple">⚙️</span>
+          Settings
+        </div>
+
+        <div class="irt-form-group">
+          <div class="irt-mini-row">
+            <label>Size Unit</label>
+            <div class="irt-input-wrap fixed-82">
+              <select id="irtSizeUnit" onchange="irtOnSizeUnitChange()">
+                <option value="px">PX</option>
+                <option value="mm">MM</option>
+                <option value="inch">INCH</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="irt-input-row" style="margin-top:6px;">
+            <div class="irt-input-wrap">
+              <input type="number" id="irtWidth" placeholder="Width px" min="1" max="8192" step="1" oninput="irtOnDimChange('w')">
+              <span class="unit" id="irtWidthUnit">px</span>
+            </div>
+
+            <button class="irt-lock-btn locked" id="irtLockBtn" onclick="irtToggleLock()" title="Lock Aspect Ratio">🔗</button>
+
+            <div class="irt-input-wrap">
+              <input type="number" id="irtHeight" placeholder="Height px" min="1" max="8192" step="1" oninput="irtOnDimChange('h')">
+              <span class="unit" id="irtHeightUnit">px</span>
+            </div>
+          </div>
+
+          <div class="irt-convert" id="irtConvertedSize">Image upload karein…</div>
+        </div>
+
+        <div class="irt-form-group">
+          <label>DPI</label>
+          <div class="irt-input-wrap">
+            <input type="number" id="irtDpi" value="72" min="1" max="1200" oninput="irtOnDpiChange()">
+            <span class="unit">dpi</span>
+          </div>
+        </div>
+
+        <div class="irt-divider"></div>
+
+        <div class="irt-form-group">
+          <label>Output Format</label>
+          <div class="irt-input-wrap">
+            <select id="irtFormat" onchange="irtOnFormatChange()">
+              <option value="image/jpeg">JPEG / JPG</option>
+              <option value="image/png">PNG</option>
+              <option value="image/webp">WebP</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="irt-form-group" id="irtQualityGroup">
+          <label>Quality</label>
+          <div class="irt-slider-wrap">
+            <input type="range" id="irtQuality" min="1" max="100" value="85" oninput="irtUpdateQualityLabel()">
+            <div class="irt-slider-value" id="irtQualityLabel">85%</div>
+          </div>
+        </div>
+
+        <div class="irt-form-group">
+          <label>Target Size Optional</label>
+          <div class="irt-target-row">
+            <div class="irt-input-wrap">
+              <input type="number" id="irtTargetSize" placeholder="e.g. 200" min="1" max="50000">
+            </div>
+            <div class="irt-input-wrap">
+              <select id="irtTargetUnit">
+                <option value="KB">KB</option>
+                <option value="MB">MB</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="irt-divider"></div>
+
+        <button class="irt-btn irt-btn-primary" id="irtResizeBtn" onclick="irtResize()" disabled>
+          🔄 Resize & Compress
+        </button>
+
+        <div class="irt-progress-wrap" id="irtProgress">
+          <div class="irt-progress-bar">
+            <div class="irt-progress-fill" id="irtProgressFill"></div>
+          </div>
+          <div class="irt-progress-text" id="irtProgressText">Processing...</div>
+        </div>
+
+        <button class="irt-btn irt-btn-outline" id="irtResetBtn" onclick="irtReset()" style="display:none">
+          🗑️ Reset
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="irt-toast" id="irtToast"></div>
+
+<!-- Hidden Canvas -->
+<canvas id="irtCanvas" class="irt-hidden"></canvas>
+
+<script>
+(function(){
+  'use strict';
+
+  // ---------- Constants ----------
+  const MAX_SIDE = 8192;
+  const MAX_PIXELS = 16000000;
+  const AUTO_MIN_SIDE = 16;
+  const PNG_SIG = new Uint8Array([137,80,78,71,13,10,26,10]);
+
+  // ---------- CRC32 for PNG metadata ----------
+  const CRC_TABLE = (function(){
+    const table = new Uint32Array(256);
+    for (let n = 0; n < 256; n++) {
+      let c = n;
+      for (let k = 0; k < 8; k++) {
+        c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+      }
+      table[n] = c >>> 0;
+    }
+    return table;
+  })();
+
+  function crc32TypeData(type, data) {
+    let c = 0xFFFFFFFF;
+    for (let i = 0; i < 4; i++) {
+      c = CRC_TABLE[(c ^ type.charCodeAt(i)) & 0xFF] ^ (c >>> 8);
+    }
+    for (let i = 0; i < data.length; i++) {
+      c = CRC_TABLE[(c ^ data[i]) & 0xFF] ^ (c >>> 8);
+    }
+    return (c ^ 0xFFFFFFFF) >>> 0;
+  }
+
+  function writeUint32BE(arr, offset, value) {
+    arr[offset] = (value >>> 24) & 255;
+    arr[offset + 1] = (value >>> 16) & 255;
+    arr[offset + 2] = (value >>> 8) & 255;
+    arr[offset + 3] = value & 255;
+  }
+
+  // ---------- State ----------
+  let originalFile = null;
+  let originalImage = null;
+  let originalObjectUrl = null;
+  let originalWidth = 0;
+  let originalHeight = 0;
+  let aspectRatio = 1;
+  let aspectLocked = true;
+
+  let resizedBlob = null;
+  let resizedObjectUrl = null;
+  let lastResizedW = 0;
+  let lastResizedH = 0;
+
+  let changingDim = false;
+  let sizeUnit = 'px';
+  let targetWpx = 0;
+  let targetHpx = 0;
+
+  // ---------- DOM ----------
+  const $ = id => document.getElementById(id);
+
+  const dropZone = $('irtDropZone');
+  const fileInput = $('irtFileInput');
+  const previewArea = $('irtPreviewArea');
+
+  const originalPreview = $('irtOriginalPreview');
+  const resizedPreview = $('irtResizedPreview');
+  const resizedPlaceholder = $('irtResizedPlaceholder');
+  const originalMeta = $('irtOriginalMeta');
+  const resizedMeta = $('irtResizedMeta');
+
+  const widthInput = $('irtWidth');
+  const heightInput = $('irtHeight');
+  const widthUnit = $('irtWidthUnit');
+  const heightUnit = $('irtHeightUnit');
+  const sizeUnitSelect = $('irtSizeUnit');
+  const convertedSize = $('irtConvertedSize');
+
+  const lockBtn = $('irtLockBtn');
+  const dpiInput = $('irtDpi');
+  const formatSelect = $('irtFormat');
+  const qualityInput = $('irtQuality');
+  const qualityLabel = $('irtQualityLabel');
+  const qualityGroup = $('irtQualityGroup');
+  const targetSizeInput = $('irtTargetSize');
+  const targetUnitSelect = $('irtTargetUnit');
+
+  const resizeBtn = $('irtResizeBtn');
+  const resetBtn = $('irtResetBtn');
+
+  const canvas = $('irtCanvas');
+  const ctx = canvas.getContext('2d');
+
+  // ---------- Utilities ----------
+  function sleep(ms) {
+    return new Promise(r => setTimeout(r, ms));
+  }
+
+  function formatSize(bytes) {
+    if (!bytes && bytes !== 0) return '—';
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+  }
+
+  function showToast(msg, type) {
+    const toast = $('irtToast');
+    toast.textContent = msg;
+    toast.className = 'irt-toast ' + type + ' show';
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => toast.classList.remove('show'), 2600);
+  }
+
+  function dpiVal() {
+    let d = parseFloat(dpiInput.value);
+    if (!isFinite(d) || d < 1) d = 72;
+    if (d > 1200) d = 1200;
+    return Math.round(d * 100) / 100;
+  }
+
+  function pxToMm(px, d) {
+    d = d || dpiVal();
+    return (px / d) * 25.4;
+  }
+
+  function mmToPx(mm, d) {
+    d = d || dpiVal();
+    return (mm / 25.4) * d;
+  }
+
+  function pxToInch(px, d) {
+    d = d || dpiVal();
+    return px / d;
+  }
+
+  function inchToPx(inch, d) {
+    d = d || dpiVal();
+    return inch * d;
+  }
+
+  function formatInch(v) {
+    return v >= 10 ? v.toFixed(2) : v.toFixed(3);
+  }
+
+  function formatDimensionPair(w, h, d) {
+    d = d || dpiVal();
+    const mmW = pxToMm(w, d);
+    const mmH = pxToMm(h, d);
+    const inW = pxToInch(w, d);
+    const inH = pxToInch(h, d);
+
+    return (
+      w + '×' + h + ' px • ' +
+      mmW.toFixed(2) + '×' + mmH.toFixed(2) + ' mm • ' +
+      formatInch(inW) + '×' + formatInch(inH) + ' in'
+    );
+  }
+
+  function clampDims(w, h, minSide) {
+    minSide = minSide || 1;
+
+    w = parseFloat(w);
+    h = parseFloat(h);
+
+    if (!isFinite(w) || w < minSide) w = minSide;
+    if (!isFinite(h) || h < minSide) h = minSide;
+
+    w = Math.round(w);
+    h = Math.round(h);
+
+    if (w > MAX_SIDE || h > MAX_SIDE) {
+      const s = Math.min(MAX_SIDE / w, MAX_SIDE / h);
+      w = Math.max(minSide, Math.round(w * s));
+      h = Math.max(minSide, Math.round(h * s));
+    }
+
+    if (w * h > MAX_PIXELS) {
+      const s = Math.sqrt(MAX_PIXELS / (w * h));
+      w = Math.max(minSide, Math.round(w * s));
+      h = Math.max(minSide, Math.round(h * s));
+    }
+
+    return { w, h };
+  }
+
+  function syncUnitUI() {
+    const u = sizeUnit;
+
+    widthUnit.textContent = u === 'inch' ? 'in' : u;
+    heightUnit.textContent = u === 'inch' ? 'in' : u;
+
+    let step = '1';
+    let min = '1';
+    let max = String(MAX_SIDE);
+    let phW = 'Width px';
+    let phH = 'Height px';
+
+    if (u === 'mm') {
+      step = '0.1';
+      min = '0.1';
+      max = '100000';
+      phW = 'Width mm';
+      phH = 'Height mm';
+    } else if (u === 'inch') {
+      step = '0.01';
+      min = '0.01';
+      max = '100000';
+      phW = 'Width inch';
+      phH = 'Height inch';
+    }
+
+    widthInput.step = step;
+    heightInput.step = step;
+    widthInput.min = min;
+    heightInput.min = min;
+    widthInput.max = max;
+    heightInput.max = max;
+    widthInput.placeholder = phW;
+    heightInput.placeholder = phH;
+  }
+
+  function setInputsFromPx() {
+    if (!originalImage) return;
+
+    const d = dpiVal();
+
+    if (sizeUnit === 'px') {
+      widthInput.value = targetWpx;
+      heightInput.value = targetHpx;
+    } else if (sizeUnit === 'mm') {
+      widthInput.value = pxToMm(targetWpx, d).toFixed(2);
+      heightInput.value = pxToMm(targetHpx, d).toFixed(2);
+    } else {
+      widthInput.value = formatInch(pxToInch(targetWpx, d));
+      heightInput.value = formatInch(pxToInch(targetHpx, d));
+    }
+  }
+
+  function inputToPx(val) {
+    const d = dpiVal();
+    if (sizeUnit === 'px') return val;
+    if (sizeUnit === 'mm') return mmToPx(val, d);
+    return inchToPx(val, d);
+  }
+
+  function updateConverted() {
+    if (!originalImage || !targetWpx || !targetHpx) {
+      convertedSize.textContent = 'Image upload karein…';
+      return;
+    }
+
+    const d = dpiVal();
+    convertedSize.textContent = formatDimensionPair(targetWpx, targetHpx, d) + ' @ ' + d + ' DPI';
+  }
+
+  function updateMetas() {
+    const d = dpiVal();
+
+    if (originalFile) {
+      originalMeta.textContent =
+        formatDimensionPair(originalWidth, originalHeight, d) +
+        ' • ' + formatSize(originalFile.size);
+
+      $('irtOrigDim').textContent = originalWidth + '×' + originalHeight + ' px';
+      $('irtOrigMm').textContent =
+        pxToMm(originalWidth, d).toFixed(2) + '×' +
+        pxToMm(originalHeight, d).toFixed(2) + ' mm';
+      $('irtOrigInch').textContent =
+        formatInch(pxToInch(originalWidth, d)) + '×' +
+        formatInch(pxToInch(originalHeight, d)) + ' in';
+      $('irtOrigSize').textContent = formatSize(originalFile.size);
+      $('irtOrigDpi').textContent = d;
+    }
+
+    if (resizedBlob && lastResizedW && lastResizedH) {
+      resizedMeta.textContent =
+        formatDimensionPair(lastResizedW, lastResizedH, d) +
+        ' • ' + formatSize(resizedBlob.size);
+
+      $('irtBeforeDim').textContent = formatDimensionPair(originalWidth, originalHeight, d);
+      $('irtAfterDim').textContent = formatDimensionPair(lastResizedW, lastResizedH, d);
+    }
+  }
+
+  // ---------- Block Right Click / Inspect ----------
+  function blockInspect() {
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      showToast('🚫 Right click disabled', 'error');
+    }, { capture: true });
+
+    document.addEventListener('keydown', function(e) {
+      const k = e.key ? e.key.toUpperCase() : '';
+      const isInspect =
+        k === 'F12' ||
+        (e.ctrlKey && e.shiftKey && (k === 'I' || k === 'J' || k === 'C' || k === 'K')) ||
+        (e.ctrlKey && k === 'U') ||
+        (e.metaKey && e.altKey && k === 'I');
+
+      if (isInspect) {
+        e.preventDefault();
+        e.stopPropagation();
+        showToast('🚫 Inspect disabled', 'error');
+      }
+    }, { capture: true });
+
+    document.addEventListener('dragstart', function(e) {
+      if (e.target && e.target.tagName === 'IMG') {
+        e.preventDefault();
+      }
+    });
+  }
+
+  // ---------- Upload ----------
+  ['dragenter', 'dragover'].forEach(evt => {
+    dropZone.addEventListener(evt, e => {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+  });
+
+  ['dragleave', 'drop'].forEach(evt => {
+    dropZone.addEventListener(evt, e => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+    });
+  });
+
+  dropZone.addEventListener('drop', e => {
+    const files = e.dataTransfer.files;
+    if (files.length) handleFile(files[0]);
+  });
+
+  fileInput.addEventListener('change', e => {
+    if (e.target.files.length) handleFile(e.target.files[0]);
+  });
+
+  function handleFile(file) {
+    const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!validTypes.includes(file.type)) {
+      showToast('❌ Unsupported format. Use JPG, PNG, or WebP.', 'error');
+      return;
+    }
+
+    if (file.size > 50 * 1024 * 1024) {
+      showToast('❌ File too large. Max 50MB.', 'error');
+      return;
+    }
+
+    if (resizedObjectUrl) {
+      URL.revokeObjectURL(resizedObjectUrl);
+      resizedObjectUrl = null;
+    }
+
+    if (originalObjectUrl) {
+      URL.revokeObjectURL(originalObjectUrl);
+      originalObjectUrl = null;
+    }
+
+    originalFile = file;
+    resizedBlob = null;
+    lastResizedW = 0;
+    lastResizedH = 0;
+
+    originalObjectUrl = URL.createObjectURL(file);
+
+    const img = new Image();
+
+    img.onload = function() {
+      originalImage = img;
+      originalWidth = img.naturalWidth;
+      originalHeight = img.naturalHeight;
+      aspectRatio = originalWidth / originalHeight;
+
+      const init = clampDims(originalWidth, originalHeight, 1);
+      targetWpx = init.w;
+      targetHpx = init.h;
+
+      originalPreview.src = originalObjectUrl;
+
+      resizedPreview.style.display = 'none';
+      resizedPreview.removeAttribute('src');
+      resizedPlaceholder.style.display = 'block';
+      resizedMeta.textContent = '—';
+
+      previewArea.classList.add('active');
+      dropZone.style.display = 'none';
+      resizeBtn.disabled = false;
+      resetBtn.style.display = 'flex';
+      $('irtResults').classList.remove('active');
+
+      const ext = file.type.split('/')[1].toUpperCase();
+      $('irtOrigFormat').textContent = ext === 'JPEG' ? 'JPG' : ext;
+
+      if (file.type === 'image/png') formatSelect.value = 'image/png';
+      else if (file.type === 'image/webp') formatSelect.value = 'image/webp';
+      else formatSelect.value = 'image/jpeg';
+
+      window.irtOnFormatChange();
+      syncUnitUI();
+      setInputsFromPx();
+      updateConverted();
+      updateMetas();
+
+      showToast('✅ Image loaded!', 'success');
+    };
+
+    img.onerror = function() {
+      showToast('❌ Image load nahi ho payi.', 'error');
+    };
+
+    img.src = originalObjectUrl;
+  }
+
+  // ---------- Aspect Lock ----------
+  window.irtToggleLock = function() {
+    aspectLocked = !aspectLocked;
+    lockBtn.classList.toggle('locked', aspectLocked);
+    lockBtn.textContent = aspectLocked ? '🔗' : '🔓';
+  };
+
+  // ---------- Dimension Change ----------
+  window.irtOnDimChange = function(which) {
+    if (changingDim || !originalImage) return;
+
+    changingDim = true;
+
+    const d = dpiVal();
+    let wPx = targetWpx;
+    let hPx = targetHpx;
+
+    const inp = which === 'w' ? widthInput : heightInput;
+    const val = parseFloat(inp.value);
+
+    if (isFinite(val) && val > 0) {
+      const px = inputToPx(val);
+
+      if (which === 'w') {
+        wPx = px;
+        if (aspectLocked) hPx = px / aspectRatio;
+      } else {
+        hPx = px;
+        if (aspectLocked) wPx = px * aspectRatio;
+      }
+    }
+
+    const c = clampDims(wPx, hPx, 1);
+    targetWpx = c.w;
+    targetHpx = c.h;
+
+    setInputsFromPx();
+    updateConverted();
+    updateMetas();
+
+    changingDim = false;
+  };
+
+  // ---------- Unit Change ----------
+  window.irtOnSizeUnitChange = function() {
+    sizeUnit = sizeUnitSelect.value;
+    syncUnitUI();
+
+    if (originalImage) {
+      setInputsFromPx();
+      updateConverted();
+      updateMetas();
+    }
+  };
+
+  // ---------- DPI Change ----------
+  window.irtOnDpiChange = function() {
+    const d = dpiVal();
+
+    if (originalImage && sizeUnit !== 'px') {
+      let wVal = parseFloat(widthInput.value);
+      let hVal = parseFloat(heightInput.value);
+
+      let wPx = (isFinite(wVal) && wVal > 0) ? inputToPx(wVal) : targetWpx;
+      let hPx = (isFinite(hVal) && hVal > 0) ? inputToPx(hVal) : targetHpx;
+
+      if (aspectLocked) {
+        hPx = wPx / aspectRatio;
+      }
+
+      const c = clampDims(wPx, hPx, 1);
+      targetWpx = c.w;
+      targetHpx = c.h;
+
+      setInputsFromPx();
+    }
+
+    updateConverted();
+    updateMetas();
+  };
+
+  // ---------- Format Change ----------
+  window.irtOnFormatChange = function() {
+    const fmt = formatSelect.value;
+    if (fmt === 'image/png') {
+      qualityGroup.style.display = 'none';
+    } else {
+      qualityGroup.style.display = 'block';
+    }
+  };
+
+  // ---------- Quality Label ----------
+  window.irtUpdateQualityLabel = function() {
+    qualityLabel.textContent = qualityInput.value + '%';
+  };
+
+  // ---------- Canvas Helpers ----------
+  function prepareCanvas(w, h, fmt) {
+    canvas.width = w;
+    canvas.height = h;
+
+    ctx.clearRect(0, 0, w, h);
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+
+    if (fmt !== 'image/png') {
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, w, h);
+    }
+
+    if (w < originalWidth / 2 || h < originalHeight / 2) {
+      stepDownscale(originalImage, w, h, ctx);
+    } else {
+      ctx.drawImage(originalImage, 0, 0, w, h);
+    }
+  }
+
+  function stepDownscale(img, targetW, targetH, context) {
+    let currentW = img.naturalWidth;
+    let currentH = img.naturalHeight;
+
+    const tempCanvas = document.createElement('canvas');
+    const tempCtx = tempCanvas.getContext('2d');
+
+    tempCanvas.width = currentW;
+    tempCanvas.height = currentH;
+    tempCtx.imageSmoothingEnabled = true;
+    tempCtx.imageSmoothingQuality = 'high';
+    tempCtx.drawImage(img, 0, 0);
+
+    while (currentW / 2 > targetW && currentH / 2 > targetH) {
+      currentW = Math.floor(currentW / 2);
+      currentH = Math.floor(currentH / 2);
+
+      const stepCanvas = document.createElement('canvas');
+      stepCanvas.width = currentW;
+      stepCanvas.height = currentH;
+
+      const stepCtx = stepCanvas.getContext('2d');
+      stepCtx.imageSmoothingEnabled = true;
+      stepCtx.imageSmoothingQuality = 'high';
+      stepCtx.drawImage(tempCanvas, 0, 0, currentW, currentH);
+
+      tempCanvas.width = currentW;
+      tempCanvas.height = currentH;
+      tempCtx.drawImage(stepCanvas, 0, 0);
+    }
+
+    context.drawImage(tempCanvas, 0, 0, targetW, targetH);
+  }
+
+  function canvasToBlob(cvs, type, quality) {
+    return new Promise(resolve => {
+      cvs.toBlob(blob => resolve(blob), type, quality);
+    });
+  }
+
+  async function getBestBlob(fmt, targetBytes, maxQuality) {
+    if (fmt === 'image/png') {
+      return await canvasToBlob(canvas, 'image/png');
+    }
+
+    if (targetBytes <= 0) {
+      return await canvasToBlob(canvas, fmt, maxQuality);
+    }
+
+    const hiBlob = await canvasToBlob(canvas, fmt, maxQuality);
+    if (hiBlob && hiBlob.size <= targetBytes) {
+      return hiBlob;
+    }
+
+    let lo = 0.05;
+    let hi = Math.max(0.05, maxQuality);
+    let best = null;
+
+    for (let i = 0; i < 16; i++) {
+      const mid = (lo + hi) / 2;
+      const blob = await canvasToBlob(canvas, fmt, mid);
+      if (!blob) continue;
+
+      if (Math.abs(blob.size - targetBytes) / targetBytes <= 0.05) {
+        return blob;
+      }
+
+      if (blob.size > targetBytes) {
+        hi = mid;
+      } else {
+        lo = mid;
+        best = blob;
+      }
+    }
+
+    if (best) return best;
+    return await canvasToBlob(canvas, fmt, lo);
+  }
+
+  // ---------- DPI Metadata: PNG ----------
+  async function setPngDpi(blob, dpi) {
+    try {
+      const buf = new Uint8Array(await blob.arrayBuffer());
+      if (buf.length < 8) return blob;
+
+      for (let i = 0; i < 8; i++) {
+        if (buf[i] !== PNG_SIG[i]) return blob;
+      }
+
+      let pos = 8;
+      const chunks = [];
+      let complete = false;
+
+      while (pos + 8 <= buf.length) {
+        const len = ((buf[pos] << 24) | (buf[pos + 1] << 16) | (buf[pos + 2] << 8) | buf[pos + 3]) >>> 0;
+        const type = String.fromCharCode(buf[pos + 4], buf[pos + 5], buf[pos + 6], buf[pos + 7]);
+        const total = 12 + len;
+
+        if (pos + total > buf.length) break;
+
+        const dataStart = pos + 8;
+        const dataEnd = dataStart + len;
+        const crcStart = dataEnd;
+        const crcEnd = crcStart + 4;
+
+        chunks.push({
+          type: type,
+          data: buf.subarray(dataStart, dataEnd),
+          crc: buf.subarray(crcStart, crcEnd)
+        });
+
+        if (type === 'IEND') {
+          complete = true;
+          break;
+        }
+
+        pos += total;
+      }
+
+      if (!complete) return blob;
+      if (!chunks.some(c => c.type === 'IHDR')) return blob;
+
+      const ppm = Math.max(1, Math.round(dpi / 0.0254));
+      const phyData = new Uint8Array(9);
+      writeUint32BE(phyData, 0, ppm);
+      writeUint32BE(phyData, 4, ppm);
+      phyData[8] = 1;
+
+      const phyCrcNum = crc32TypeData('pHYs', phyData);
+      const phyCrc = new Uint8Array(4);
+      writeUint32BE(phyCrc, 0, phyCrcNum);
+
+      const outChunks = [];
+
+      for (const ch of chunks) {
+        if (ch.type === 'pHYs') continue;
+        outChunks.push(ch);
+
+        if (ch.type === 'IHDR') {
+          outChunks.push({
+            type: 'pHYs',
+            data: phyData,
+            crc: phyCrc
+          });
+        }
+      }
+
+      const parts = [PNG_SIG];
+
+      for (const ch of outChunks) {
+        const lenArr = new Uint8Array(4);
+        writeUint32BE(lenArr, 0, ch.data.length);
+
+        const typeArr = new Uint8Array([
+          ch.type.charCodeAt(0),
+          ch.type.charCodeAt(1),
+          ch.type.charCodeAt(2),
+          ch.type.charCodeAt(3)
+        ]);
+
+        parts.push(lenArr, typeArr, ch.data, ch.crc);
+      }
+
+      return new Blob(parts, { type: 'image/png' });
+    } catch (err) {
+      console.warn('PNG DPI embed error:', err);
+      return blob;
+    }
+  }
+
+  // ---------- DPI Metadata: JPEG ----------
+  async function setJpegDpi(blob, dpi) {
+    try {
+      const u8 = new Uint8Array(await blob.arrayBuffer());
+      if (u8.length < 2 || u8[0] !== 0xFF || u8[1] !== 0xD8) return blob;
+
+      const dpiInt = Math.max(1, Math.min(65535, Math.round(dpi)));
+      let pos = 2;
+
+      while (pos + 1 < u8.length) {
+        if (u8[pos] !== 0xFF) {
+          pos++;
+          continue;
+        }
+
+        let marker = u8[pos + 1];
+
+        while (marker === 0xFF && pos + 2 < u8.length) {
+          pos++;
+          marker = u8[pos + 1];
+        }
+
+        if (marker === 0xD9) break;
+
+        if (marker >= 0xD0 && marker <= 0xD7) {
+          pos += 2;
+          continue;
+        }
+
+        if (marker === 0xDA) break;
+
+        if (pos + 3 >= u8.length) break;
+
+        const segLen = ((u8[pos + 2] << 8) | u8[pos + 3]) & 0xFFFF;
+        if (segLen < 2 || pos + 2 + segLen > u8.length) break;
+
+        if (
+          marker === 0xE0 &&
+          segLen >= 16 &&
+          pos + 15 < u8.length &&
+          u8[pos + 4] === 0x4A &&
+          u8[pos + 5] === 0x46 &&
+          u8[pos + 6] === 0x49 &&
+          u8[pos + 7] === 0x46 &&
+          u8[pos + 8] === 0x00
+        ) {
+          u8[pos + 11] = 1; // dots per inch
+          u8[pos + 12] = (dpiInt >> 8) & 255;
+          u8[pos + 13] = dpiInt & 255;
+          u8[pos + 14] = (dpiInt >> 8) & 255;
+          u8[pos + 15] = dpiInt & 255;
+
+          return new Blob([u8], { type: 'image/jpeg' });
+        }
+
+        pos += 2 + segLen;
+      }
+
+      const app0 = new Uint8Array([
+        0xFF, 0xE0,
+        0x00, 0x10,
+        0x4A, 0x46, 0x49, 0x46, 0x00,
+        0x01, 0x02,
+        0x01,
+        (dpiInt >> 8) & 255, dpiInt & 255,
+        (dpiInt >> 8) & 255, dpiInt & 255,
+        0x00, 0x00
+      ]);
+
+      const out = new Uint8Array(u8.length + app0.length);
+      out.set(u8.subarray(0, 2), 0);
+      out.set(app0, 2);
+      out.set(u8.subarray(2), 2 + app0.length);
+
+      return new Blob([out], { type: 'image/jpeg' });
+    } catch (err) {
+      console.warn('JPEG DPI embed error:', err);
+      return blob;
+    }
+  }
+
+  async function applyDpiMetadata(blob, fmt, dpi) {
+    if (!blob) return blob;
+
+    try {
+      if (fmt === 'image/png') return await setPngDpi(blob, dpi);
+      if (fmt === 'image/jpeg') return await setJpegDpi(blob, dpi);
+    } catch (err) {
+      console.warn('DPI metadata error:', err);
+    }
+
+    return blob;
+  }
+
+  // ---------- Resize ----------
+  window.irtResize = async function() {
+    if (!originalImage) {
+      showToast('❌ Pehle image upload karein.', 'error');
+      return;
+    }
+
+    if (!targetWpx || !targetHpx) {
+      showToast('❌ Valid size daalein.', 'error');
+      return;
+    }
+
+    const fmt = formatSelect.value;
+    const quality = Math.min(1, Math.max(0.01, parseInt(qualityInput.value, 10) / 100));
+    const targetRaw = parseFloat(targetSizeInput.value);
+    const targetUnit = targetUnitSelect.value;
+
+    let targetBytes = 0;
+    if (isFinite(targetRaw) && targetRaw > 0) {
+      targetBytes = targetUnit === 'MB' ? targetRaw * 1024 * 1024 : targetRaw * 1024;
+    }
+
+    const progressWrap = $('irtProgress');
+    const progressFill = $('irtProgressFill');
+    const progressText = $('irtProgressText');
+
+    progressWrap.classList.add('active');
+    progressFill.style.width = '10%';
+    progressText.textContent = 'Resizing image...';
+    resizeBtn.disabled = true;
+
+    let drawW = targetWpx;
+    let drawH = targetHpx;
+
+    try {
+      await sleep(60);
+
+      prepareCanvas(drawW, drawH, fmt);
+
+      progressFill.style.width = '40%';
+      progressText.textContent = 'Compressing...';
+      await sleep(60);
+
+      let rawBlob = await getBestBlob(fmt, targetBytes, quality);
+
+      let attempts = 0;
+      while (
+        targetBytes > 0 &&
+        rawBlob &&
+        rawBlob.size > targetBytes * 1.02 &&
+        attempts < 8 &&
+        drawW > AUTO_MIN_SIDE &&
+        drawH > AUTO_MIN_SIDE
+      ) {
+        attempts++;
+
+        const scale = Math.max(0.3, Math.min(0.95, Math.sqrt(targetBytes / rawBlob.size) * 0.95));
+        let nd = clampDims(Math.floor(drawW * scale), Math.floor(drawH * scale), AUTO_MIN_SIDE);
+
+        if (nd.w === drawW && nd.h === drawH) {
+          nd = clampDims(drawW - 1, drawH - 1, AUTO_MIN_SIDE);
+        }
+
+        drawW = nd.w;
+        drawH = nd.h;
+
+        prepareCanvas(drawW, drawH, fmt);
+        rawBlob = await getBestBlob(fmt, targetBytes, quality);
+
+        progressFill.style.width = (40 + attempts * 5) + '%';
+        progressText.textContent = 'Target size ke liye optimize… ' + attempts;
+        await sleep(30);
+      }
+
+      if (!rawBlob) {
+        throw new Error('Blob generate nahi hua');
+      }
+
+      let finalBlob = await applyDpiMetadata(rawBlob, fmt, dpiVal());
+
+      let postAttempts = 0;
+      while (
+        targetBytes > 0 &&
+        finalBlob &&
+        finalBlob.size > targetBytes &&
+        postAttempts < 2 &&
+        drawW > AUTO_MIN_SIDE &&
+        drawH > AUTO_MIN_SIDE
+      ) {
+        postAttempts++;
+
+        const scale = Math.max(0.5, Math.min(0.98, Math.sqrt(targetBytes / finalBlob.size) * 0.97));
+        let nd = clampDims(Math.floor(drawW * scale), Math.floor(drawH * scale), AUTO_MIN_SIDE);
+
+        if (nd.w === drawW && nd.h === drawH) {
+          nd = clampDims(drawW - 1, drawH - 1, AUTO_MIN_SIDE);
+        }
+
+        drawW = nd.w;
+        drawH = nd.h;
+
+        prepareCanvas(drawW, drawH, fmt);
+        rawBlob = await getBestBlob(fmt, targetBytes, quality);
+        finalBlob = await applyDpiMetadata(rawBlob, fmt, dpiVal());
+
+        progressFill.style.width = (80 + postAttempts * 5) + '%';
+        progressText.textContent = 'Final size check… ' + postAttempts;
+        await sleep(30);
+      }
+
+      resizedBlob = finalBlob;
+
+      if (resizedObjectUrl) URL.revokeObjectURL(resizedObjectUrl);
+      resizedObjectUrl = URL.createObjectURL(resizedBlob);
+
+      lastResizedW = drawW;
+      lastResizedH = drawH;
+
+      targetWpx = drawW;
+      targetHpx = drawH;
+
+      setInputsFromPx();
+      updateConverted();
+
+      resizedPreview.src = resizedObjectUrl;
+      resizedPreview.style.display = 'block';
+      resizedPlaceholder.style.display = 'none';
+
+      updateMetas();
+
+      const beforeSize = originalFile.size;
+      const afterSize = resizedBlob.size;
+      const savings = (1 - afterSize / beforeSize) * 100;
+
+      $('irtBeforeSize').textContent = formatSize(beforeSize);
+      $('irtAfterSize').textContent = formatSize(afterSize);
+
+      if (savings < 0) {
+        $('irtSavingsPct').style.color = 'var(--danger)';
+        $('irtSavingsPct').textContent = '+' + Math.abs(savings).toFixed(1) + '%';
+      } else {
+        $('irtSavingsPct').style.color = 'var(--success)';
+        $('irtSavingsPct').textContent = savings.toFixed(1) + '%';
+      }
+
+      $('irtResults').classList.add('active');
+
+      progressFill.style.width = '100%';
+      progressText.textContent = 'Done!';
+
+      setTimeout(() => {
+        progressWrap.classList.remove('active');
+      }, 900);
+
+      if (targetBytes > 0 && resizedBlob.size > targetBytes) {
+        showToast('⚠️ Target size se thoda bada banaya, aur compress nahi ho saka.', 'error');
+      } else if (attempts > 0 || postAttempts > 0) {
+        showToast('ℹ️ Target size ke liye dimensions adjust kiye gaye.', 'success');
+      } else {
+        showToast('✅ Resized & compressed!', 'success');
+      }
+    } catch (err) {
+      console.error(err);
+      showToast('❌ Processing error: ' + (err && err.message ? err.message : 'unknown'), 'error');
+    } finally {
+      resizeBtn.disabled = false;
+    }
+  };
+
+  // ---------- Download ----------
+  window.irtDownload = function() {
+    if (!resizedBlob) {
+      showToast('❌ Pehle resize karein.', 'error');
+      return;
+    }
+
+    const fmt = formatSelect.value;
+    let ext = 'jpg';
+
+    if (fmt === 'image/png') ext = 'png';
+    else if (fmt === 'image/webp') ext = 'webp';
+
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(resizedBlob);
+    a.download = 'print-hub-pro-' + lastResizedW + 'x' + lastResizedH + '.' + ext;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+
+    showToast('⬇️ Download started!', 'success');
+  };
+
+  // ---------- Reset ----------
+  window.irtReset = function() {
+    originalFile = null;
+    originalImage = null;
+    originalWidth = 0;
+    originalHeight = 0;
+    aspectRatio = 1;
+
+    resizedBlob = null;
+    lastResizedW = 0;
+    lastResizedH = 0;
+    targetWpx = 0;
+    targetHpx = 0;
+
+    if (resizedObjectUrl) {
+      URL.revokeObjectURL(resizedObjectUrl);
+      resizedObjectUrl = null;
+    }
+
+    if (originalObjectUrl) {
+      URL.revokeObjectURL(originalObjectUrl);
+      originalObjectUrl = null;
+    }
+
+    originalPreview.removeAttribute('src');
+    resizedPreview.removeAttribute('src');
+    resizedPreview.style.display = 'none';
+    resizedPlaceholder.style.display = 'block';
+
+    originalMeta.textContent = '—';
+    resizedMeta.textContent = '—';
+
+    $('irtOrigDim').textContent = '—';
+    $('irtOrigMm').textContent = '—';
+    $('irtOrigInch').textContent = '—';
+    $('irtOrigSize').textContent = '—';
+    $('irtOrigFormat').textContent = '—';
+    $('irtOrigDpi').textContent = '—';
+
+    previewArea.classList.remove('active');
+    $('irtResults').classList.remove('active');
+
+    dropZone.style.display = '';
+    fileInput.value = '';
+
+    resizeBtn.disabled = true;
+    resetBtn.style.display = 'none';
+
+    sizeUnitSelect.value = 'px';
+    sizeUnit = 'px';
+    syncUnitUI();
+
+    widthInput.value = '';
+    heightInput.value = '';
+    convertedSize.textContent = 'Image upload karein…';
+
+    dpiInput.value = 72;
+    formatSelect.value = 'image/jpeg';
+    qualityInput.value = 85;
+    window.irtUpdateQualityLabel();
+    targetSizeInput.value = '';
+    targetUnitSelect.value = 'KB';
+
+    window.irtOnFormatChange();
+    $('irtProgress').classList.remove('active');
+
+    showToast('🗑️ Reset complete.', 'success');
+  };
+
+  // ---------- Init ----------
+  syncUnitUI();
+  window.irtOnFormatChange();
+  window.irtUpdateQualityLabel();
+  updateConverted();
+  blockInspect();
+})();
+</script>

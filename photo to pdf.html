@@ -1,0 +1,811 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PrintHub Pro - Image to PDF</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  background:#f3f4f6;
+  color:#111827;
+  -webkit-user-select:none;
+  user-select:none;
+}
+input,select,textarea{
+  -webkit-user-select:text;
+  user-select:text;
+}
+.app{max-width:940px;margin:0 auto;padding:10px;display:grid;gap:10px}
+
+header{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  min-height:34px;
+  text-align:center;
+  flex-wrap:wrap;
+}
+.logo{width:22px;height:22px;border-radius:6px;background:conic-gradient(#00aecf 0 25%,#e6007e 0 50%,#f5b800 0 75%,#111827 0)}
+h1{font-size:16px;margin:0;letter-spacing:-.02em}
+.sub{font-size:11px;color:#6b7280}
+.right{position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:11px;color:#6b7280}
+
+.main{display:grid;grid-template-columns:1fr 205px;gap:10px;align-items:start}
+.panel{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:9px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+
+.drop{border:1.5px dashed #cbd5e1;border-radius:9px;padding:10px;text-align:center;background:#fafafa;cursor:pointer;font-weight:600;font-size:13px}
+.drop.hot{border-color:#0f766e;background:#ecfeff}
+.row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.btn{border:1px solid #e5e7eb;background:#fff;border-radius:8px;padding:6px 9px;font-size:12px;font-weight:600;cursor:pointer}
+.btn:hover{background:#f9fafb}
+.btn.primary{background:#111827;color:#fff;border-color:#111827}
+.btn.primary:hover{background:#000}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.hint{font-size:11px;color:#6b7280;margin-left:auto}
+
+.thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;margin-top:8px}
+.card{position:relative;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;background:#fff;cursor:grab;user-select:none}
+.card.sel{border-color:#111827;box-shadow:0 0 0 1px #111827 inset}
+.card.placeholder{border:1.5px dashed #94a3b8;background:#f8fafc;min-height:92px}
+.thumb{height:70px;background:#f9fafb;display:grid;place-items:center;overflow:hidden}
+.thumb img{max-width:100%;max-height:100%;object-fit:contain;pointer-events:none}
+.meta{padding:5px 6px;font-size:10px;color:#6b7280;display:flex;justify-content:space-between;gap:4px;border-top:1px solid #f1f5f9}
+.meta b{color:#111827;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:54px}
+.index{position:absolute;left:4px;top:4px;background:#111827;color:#fff;font-size:10px;padding:1px 5px;border-radius:4px}
+.actions{position:absolute;right:4px;top:4px;display:flex;gap:3px;opacity:0;transition:.15s}
+.card:hover .actions,.card.sel .actions{opacity:1}
+.icon{width:22px;height:22px;border-radius:5px;border:1px solid #e5e7eb;background:rgba(255,255,255,.95);display:grid;place-items:center;font-size:12px;line-height:1;color:#374151;cursor:pointer}
+.icon:hover{background:#111827;color:#fff;border-color:#111827}
+
+.field{display:grid;gap:4px;margin-bottom:7px}
+.field label{font-size:10px;color:#6b7280;display:flex;justify-content:space-between;gap:8px}
+.field label span{color:#111827;font-weight:600}
+select,input[type=range]{width:100%}
+select{border:1px solid #e5e7eb;border-radius:8px;background:#fff;padding:5px 6px;font-size:11px}
+input[type=range]{accent-color:#0f766e;height:20px}
+.check{display:flex;align-items:center;gap:7px;font-size:12px;margin:4px 0 7px}
+.preview{min-height:104px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;display:grid;place-items:center;padding:6px}
+.page{position:relative;height:88px;background:#fff;box-shadow:0 1px 5px rgba(0,0,0,.16);overflow:hidden}
+.page .guide{position:absolute;border:1px dashed rgba(220,38,38,.55)}
+.page .box{position:absolute;display:grid;place-items:center;overflow:hidden;background:#fff}
+.page .box img{width:100%;height:100%;object-fit:contain}
+.page .num{position:absolute;bottom:3px;left:0;right:0;text-align:center;font-size:7px;color:#555}
+.none{font-size:11px;color:#9ca3af}
+
+.status{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:8px 10px}
+.status .grow{flex:1;min-width:140px;color:#6b7280;font-size:12px}
+
+body.dragging-active{cursor:grabbing}
+body.dragging-active .card{cursor:grabbing}
+body.original .conditional{display:none}
+
+@media(max-width:760px){
+  .main{grid-template-columns:1fr}
+  .thumbs{grid-template-columns:repeat(auto-fill,minmax(86px,1fr))}
+  .hint{width:100%;margin-left:0}
+  .actions{opacity:1}
+  .right{position:static;transform:none;width:100%;order:3;margin-top:4px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="logo"></div>
+    <div>
+      <h1>PrintHub Pro</h1>
+      <div class="sub">Image → PDF · developed by Chandan Maurya</div>
+    </div>
+    <div class="right" id="engine">idle</div>
+  </header>
+
+  <div class="main">
+    <section class="panel">
+      <div class="drop" id="drop" tabindex="0">Drop JPG / PNG here · click to browse</div>
+      <input type="file" id="file" accept="image/*" multiple hidden>
+      <div class="row">
+        <button class="btn" id="addBtn">Add</button>
+        <button class="btn" id="sortBtn" disabled>Sort</button>
+        <button class="btn" id="clearBtn" disabled>Clear</button>
+        <span class="hint" id="count">0/100 sheets</span>
+      </div>
+      <div class="thumbs" id="thumbs"></div>
+    </section>
+
+    <aside class="panel">
+      <div class="field">
+        <label>Paper <span id="paperInfo">Original</span></label>
+        <select id="size">
+          <option value="Original">Original</option>
+          <option value="A4">A4</option>
+          <option value="A5">A5</option>
+          <option value="Letter">Letter</option>
+        </select>
+      </div>
+
+      <div class="field conditional">
+        <label>Orientation</label>
+        <select id="orient">
+          <option value="portrait">Portrait</option>
+          <option value="landscape">Landscape</option>
+        </select>
+      </div>
+
+      <div class="field conditional">
+        <label>Margin <span id="marginVal">12 mm</span></label>
+        <input type="range" id="margin" min="0" max="40" step="1" value="12">
+      </div>
+
+      <div class="field conditional">
+        <label>Placement</label>
+        <select id="mode">
+          <option value="fit">Fit</option>
+          <option value="fill">Fill</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Quality <span id="qVal">82%</span></label>
+        <input type="range" id="quality" min="20" max="100" step="1" value="82">
+      </div>
+
+      <label class="check"><input type="checkbox" id="numbering"> Page numbers</label>
+
+      <div class="preview"><div class="page" id="page"><span class="none">no sheet</span></div></div>
+      <div class="sub" id="pageInfo" style="margin-top:5px">—</div>
+    </aside>
+  </div>
+
+  <div class="status">
+    <span class="grow" id="stat">No sheets</span>
+    <strong id="est">0 B</strong>
+    <button class="btn primary" id="download" disabled>Download PDF</button>
+  </div>
+</div>
+
+<script>
+(() => {
+const $ = s => document.querySelector(s);
+const SIZES = { A4:[210,297], A5:[148,210], Letter:[215.9,279.4] };
+const MAX_IMAGES = 100;
+const clamp = (v,a,b) => Math.min(b, Math.max(a,v));
+const norm = r => ((r % 360) + 360) % 360;
+const esc = s => String(s).replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+const fmt = b => b >= 1048576 ? (b/1048576).toFixed(2)+' MB' : b >= 1024 ? Math.round(b/1024)+' KB' : Math.round(b)+' B';
+
+const state = {
+  items: [],
+  uid: 0,
+  selId: null,
+  busy: false,
+  token: 0,
+  pending: 0,
+  cfg: { size:'Original', orient:'portrait', margin:12, mode:'fit', quality:82, numbering:false }
+};
+
+try { Object.assign(state.cfg, JSON.parse(localStorage.getItem('php.compact.cfg') || '{}')); } catch(e) {}
+if (!['Original','A4','A5','Letter'].includes(state.cfg.size)) state.cfg.size = 'Original';
+
+const cv = document.createElement('canvas');
+const thumbs = $('#thumbs');
+
+let drag = null;
+let suppressClick = false;
+let flashTimer = null;
+let timer = null;
+
+function save() { try { localStorage.setItem('php.compact.cfg', JSON.stringify(state.cfg)); } catch(e) {} }
+function current() { const i = state.items.findIndex(x => x.id === state.selId); return i < 0 ? 0 : i; }
+function invalidate() { state.items.forEach(i => i.pc = null); }
+function flash(msg) {
+  $('#stat').textContent = msg;
+  clearTimeout(flashTimer);
+  flashTimer = setTimeout(status, 2600);
+}
+
+function geom(it) {
+  const c = state.cfg, rot = norm(it.rot);
+  const sw = rot % 180 ? it.h : it.w;
+  const sh = rot % 180 ? it.w : it.h;
+
+  if (c.size === 'Original') {
+    const pw = sw / 96 * 25.4;
+    const ph = sh / 96 * 25.4;
+    return { pw, ph, m:0, x:0, y:0, w:pw, h:ph, dpi:96, rot, sw, sh };
+  }
+
+  let [pw, ph] = SIZES[c.size];
+  if (c.orient === 'landscape') [pw, ph] = [ph, pw];
+
+  const m = c.margin;
+  const w = Math.max(6, pw - 2 * m);
+  const h = Math.max(6, ph - 2 * m);
+  const dpi = clamp(Math.round(96 + ((c.quality - 20) / 80) * 224), 96, 320);
+  return { pw, ph, m, x:m, y:m, w, h, dpi, rot, sw, sh };
+}
+
+function rotatedSource(it, rot) {
+  if (!rot) return it.img;
+  const key = it.id + ':' + rot;
+  if (it._rotKey === key) return it._rot;
+
+  const c = document.createElement('canvas');
+  c.width = rot % 180 ? it.h : it.w;
+  c.height = rot % 180 ? it.w : it.h;
+
+  const x = c.getContext('2d');
+  x.translate(c.width / 2, c.height / 2);
+  x.rotate(rot * Math.PI / 180);
+  x.drawImage(it.img, -it.w / 2, -it.h / 2);
+
+  it._rot = c;
+  it._rotKey = key;
+  return c;
+}
+
+function encode(it) {
+  const g = geom(it), c = state.cfg;
+  let cw, ch, pw = g.pw, ph = g.ph, x = g.x, y = g.y, w = g.w, h = g.h;
+
+  if (c.size === 'Original') {
+    const cap = 8000;
+    if (Math.max(g.sw, g.sh) > cap) {
+      const s = cap / Math.max(g.sw, g.sh);
+      cw = Math.max(1, Math.round(g.sw * s));
+      ch = Math.max(1, Math.round(g.sh * s));
+    } else {
+      cw = g.sw;
+      ch = g.sh;
+    }
+    pw = cw / 96 * 25.4;
+    ph = ch / 96 * 25.4;
+    x = 0; y = 0; w = pw; h = ph;
+  } else {
+    const ppm = g.dpi / 25.4;
+    cw = Math.round(g.w * ppm);
+    ch = Math.round(g.h * ppm);
+    const cap = 8000;
+    const sc = Math.min(1, cap / Math.max(cw, ch));
+    cw = Math.max(1, Math.round(cw * sc));
+    ch = Math.max(1, Math.round(ch * sc));
+  }
+
+  const src = rotatedSource(it, g.rot);
+  cv.width = cw;
+  cv.height = ch;
+
+  const ctx = cv.getContext('2d');
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, cw, ch);
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+
+  const scale = c.mode === 'fill'
+    ? Math.max(cw / g.sw, ch / g.sh)
+    : Math.min(cw / g.sw, ch / g.sh);
+
+  const dw = g.sw * scale;
+  const dh = g.sh * scale;
+  ctx.drawImage(src, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
+
+  const url = cv.toDataURL('image/jpeg', c.quality / 100);
+  const b64 = url.length - url.indexOf(',') - 1;
+
+  return { ...g, pw, ph, x, y, w, h, url, bytes: Math.floor(b64 * .75) };
+}
+
+function addFiles(fileList) {
+  const all = [...fileList].filter(f => /^image\//.test(f.type));
+  const room = MAX_IMAGES - state.items.length - state.pending;
+
+  if (room <= 0) {
+    flash(`Max ${MAX_IMAGES} images allowed`);
+    return;
+  }
+
+  const files = all.slice(0, room);
+  if (!files.length) return;
+
+  state.pending += files.length;
+  let waiting = files.length;
+  const loaded = [];
+
+  files.forEach(file => {
+    const it = {
+      id: ++state.uid,
+      name: file.name,
+      size: file.size,
+      url: URL.createObjectURL(file),
+      img: null,
+      w: 0,
+      h: 0,
+      rot: 0,
+      pc: null,
+      _rot: null,
+      _rotKey: ''
+    };
+
+    const img = new Image();
+    img.onload = () => {
+      it.img = img;
+      it.w = img.naturalWidth;
+      it.h = img.naturalHeight;
+      loaded.push(it);
+      finishOne();
+    };
+    img.onerror = finishOne;
+    img.src = it.url;
+
+    function finishOne() {
+      state.pending--;
+      waiting--;
+      if (waiting === 0) done();
+    }
+  });
+
+  function done() {
+    if (!loaded.length) return;
+    state.items.push(...loaded);
+    state.selId = loaded[loaded.length - 1].id;
+    render();
+    estimate();
+  }
+}
+
+function render() {
+  thumbs.innerHTML = '';
+
+  if (state.items.length && !state.items.some(i => i.id === state.selId)) {
+    state.selId = state.items[state.items.length - 1].id;
+  }
+
+  state.items.forEach((it, idx) => {
+    const card = document.createElement('div');
+    card.className = 'card' + (it.id === state.selId ? ' sel' : '');
+    card.dataset.id = it.id;
+    card.innerHTML = `
+      <span class="index">${idx + 1}</span>
+      <div class="thumb"><img src="${it.url}" style="transform:rotate(${it.rot}deg)" alt=""></div>
+      <div class="meta"><b title="${esc(it.name)}">${esc(it.name)}</b><span>${it.w}×${it.h}</span></div>
+      <div class="actions">
+        <button class="icon" data-a="left" title="Move left">←</button>
+        <button class="icon" data-a="rot" title="Rotate">↻</button>
+        <button class="icon" data-a="right" title="Move right">→</button>
+        <button class="icon" data-a="del" title="Remove">×</button>
+      </div>`;
+    thumbs.appendChild(card);
+  });
+
+  const n = state.items.length;
+  $('#count').textContent = `${n}/${MAX_IMAGES} sheets`;
+  $('#sortBtn').disabled = n < 2;
+  $('#clearBtn').disabled = !n;
+  preview();
+  status();
+}
+
+function status(msg) {
+  const n = state.items.length;
+  const out = state.items.reduce((a,b) => a + (b.pc ? b.pc.bytes : 0), 0);
+  const ready = n > 0 && state.items.every(i => i.pc);
+
+  $('#stat').textContent = msg || (state.busy ? 'Working...' : ready ? `${n} sheet${n>1?'s':''} ready` : 'No sheets');
+  $('#est').textContent = fmt(out);
+  $('#download').disabled = !ready || state.busy;
+  $('#engine').textContent = state.busy ? 'working' : ready ? 'ready' : 'idle';
+}
+
+function schedule() {
+  clearTimeout(timer);
+  timer = setTimeout(estimate, 220);
+}
+
+async function estimate() {
+  const my = ++state.token;
+  state.busy = true;
+  status('Encoding...');
+
+  for (let i = 0; i < state.items.length; i++) {
+    if (my !== state.token) return;
+    await new Promise(r => setTimeout(r, 0));
+    state.items[i].pc = encode(state.items[i]);
+    status(`Encoding ${i + 1}/${state.items.length}`);
+  }
+
+  if (my !== state.token) return;
+  state.busy = false;
+  preview();
+  status();
+}
+
+function preview() {
+  const page = $('#page');
+  const idx = current();
+  const it = state.items[idx];
+
+  if (!it) {
+    page.innerHTML = '<span class="none">no sheet</span>';
+    $('#pageInfo').textContent = '—';
+    return;
+  }
+
+  const g = geom(it);
+  page.style.aspectRatio = `${g.pw} / ${g.ph}`;
+  page.className = 'page' + (state.cfg.mode === 'fill' && state.cfg.size !== 'Original' ? ' fill' : '');
+
+  const left = g.x / g.pw * 100;
+  const top = g.y / g.ph * 100;
+  const width = g.w / g.pw * 100;
+  const height = g.h / g.ph * 100;
+
+  const img = it.pc ? `<img src="${it.pc.url}" alt="">` : '<span class="none">encoding...</span>';
+  const num = state.cfg.numbering ? `<span class="num">${idx + 1} / ${state.items.length}</span>` : '';
+
+  page.innerHTML = `
+    <div class="guide" style="left:${left}%;top:${top}%;width:${width}%;height:${height}%"></div>
+    <div class="box" style="left:${left}%;top:${top}%;width:${width}%;height:${height}%">${img}</div>
+    ${num}`;
+
+  $('#pageInfo').textContent = state.cfg.size === 'Original'
+    ? `${g.pw.toFixed(0)}×${g.ph.toFixed(0)} mm · Original`
+    : `${g.pw.toFixed(0)}×${g.ph.toFixed(0)} mm · ${g.dpi} dpi · ${state.cfg.mode}`;
+}
+
+async function download() {
+  if (!state.items.length || state.busy) return;
+  if (!window.jspdf || !window.jspdf.jsPDF) {
+    alert('PDF engine load nahi hua. Reload karein.');
+    return;
+  }
+
+  state.busy = true;
+  status('Building PDF...');
+
+  const { jsPDF } = window.jspdf;
+  let doc = null;
+
+  for (let i = 0; i < state.items.length; i++) {
+    const it = state.items[i];
+    const pc = it.pc || encode(it);
+    const pw = +pc.pw.toFixed(2);
+    const ph = +pc.ph.toFixed(2);
+
+    if (!doc) doc = new jsPDF({ unit:'mm', format:[pw, ph], orientation:'portrait', compress:true, precision:2 });
+    else doc.addPage([pw, ph], 'portrait');
+
+    doc.addImage(pc.url, 'JPEG', +pc.x.toFixed(2), +pc.y.toFixed(2), +pc.w.toFixed(2), +pc.h.toFixed(2), undefined, 'FAST');
+
+    if (state.cfg.numbering) {
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(100);
+      doc.text(`${i + 1} / ${state.items.length}`, pw / 2, ph - 4, { align: 'center' });
+    }
+
+    status(`Building ${i + 1}/${state.items.length}`);
+    await new Promise(r => setTimeout(r, 0));
+  }
+
+  const blob = doc.output('blob');
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const d = new Date();
+
+  a.href = url;
+  a.download = `PrintHub-${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}-${state.items.length}p.pdf`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+
+  setTimeout(() => URL.revokeObjectURL(url), 3000);
+
+  state.busy = false;
+  status();
+}
+
+function moveItem(from, to) {
+  if (to < 0 || to >= state.items.length) return;
+  const item = state.items.splice(from, 1)[0];
+  state.items.splice(to, 0, item);
+  state.selId = item.id;
+  render();
+}
+
+thumbs.addEventListener('pointerdown', e => {
+  if (e.pointerType === 'touch') return;
+  if (e.button !== 0) return;
+
+  const card = e.target.closest('.card');
+  if (!card || e.target.closest('button')) return;
+
+  const r = card.getBoundingClientRect();
+  drag = {
+    id: +card.dataset.id,
+    card,
+    sx: e.clientX,
+    sy: e.clientY,
+    ox: e.clientX - r.left,
+    oy: e.clientY - r.top,
+    w: r.width,
+    h: r.height,
+    moved: false,
+    ph: null
+  };
+
+  e.preventDefault();
+});
+
+window.addEventListener('pointermove', e => {
+  if (!drag) return;
+
+  if (!drag.moved) {
+    if (Math.hypot(e.clientX - drag.sx, e.clientY - drag.sy) < 6) return;
+
+    drag.moved = true;
+
+    const ph = document.createElement('div');
+    ph.className = 'card placeholder';
+    ph.style.height = drag.h + 'px';
+    drag.card.after(ph);
+    drag.ph = ph;
+
+    Object.assign(drag.card.style, {
+      position: 'fixed',
+      left: '0',
+      top: '0',
+      width: drag.w + 'px',
+      height: drag.h + 'px',
+      margin: '0',
+      zIndex: '9999',
+      pointerEvents: 'none',
+      boxShadow: '0 12px 28px rgba(0,0,0,.28)',
+      opacity: '.96'
+    });
+
+    document.body.appendChild(drag.card);
+    document.body.classList.add('dragging-active');
+  }
+
+  drag.card.style.transform = `translate(${e.clientX - drag.ox}px, ${e.clientY - drag.oy}px)`;
+  movePlaceholder(e.clientX, e.clientY);
+});
+
+function movePlaceholder(x, y) {
+  if (!drag || !drag.ph) return;
+
+  const cards = [...thumbs.children].filter(el => el.classList.contains('card') && el !== drag.ph);
+  let target = null;
+
+  for (const el of cards) {
+    const r = el.getBoundingClientRect();
+    const cy = r.top + r.height / 2;
+    const cx = r.left + r.width / 2;
+
+    if (y < cy || (Math.abs(y - cy) <= r.height / 2 && x < cx)) {
+      target = el;
+      break;
+    }
+  }
+
+  if (target) thumbs.insertBefore(drag.ph, target);
+  else thumbs.appendChild(drag.ph);
+}
+
+function endDrag() {
+  if (!drag) return;
+
+  const d = drag;
+  drag = null;
+
+  if (!d.moved) {
+    state.selId = d.id;
+    render();
+    return;
+  }
+
+  suppressClick = true;
+  setTimeout(() => suppressClick = false, 80);
+
+  if (d.ph && d.card) {
+    thumbs.insertBefore(d.card, d.ph);
+    d.ph.remove();
+  }
+
+  if (d.card) d.card.style.cssText = '';
+  document.body.classList.remove('dragging-active');
+
+  const ids = [...thumbs.querySelectorAll('.card:not(.placeholder)')]
+    .map(el => +el.dataset.id)
+    .filter(Boolean);
+
+  state.items.sort((a,b) => ids.indexOf(a.id) - ids.indexOf(b.id));
+  render();
+}
+
+window.addEventListener('pointerup', endDrag);
+window.addEventListener('pointercancel', endDrag);
+
+thumbs.addEventListener('click', e => {
+  if (suppressClick) return;
+
+  const card = e.target.closest('.card');
+  if (!card) return;
+
+  const id = +card.dataset.id;
+  const i = state.items.findIndex(x => x.id === id);
+  if (i < 0) return;
+
+  const btn = e.target.closest('[data-a]');
+  if (!btn) {
+    state.selId = id;
+    render();
+    return;
+  }
+
+  const a = btn.dataset.a;
+
+  if (a === 'del') {
+    URL.revokeObjectURL(state.items[i].url);
+    state.items.splice(i, 1);
+    if (state.selId === id) state.selId = state.items[0]?.id || null;
+    render();
+    return;
+  }
+
+  if (a === 'rot') {
+    state.items[i].rot = (state.items[i].rot + 90) % 360;
+    state.items[i]._rotKey = '';
+    state.items[i].pc = null;
+    invalidate();
+    render();
+    schedule();
+    return;
+  }
+
+  if (a === 'left') moveItem(i, i - 1);
+  if (a === 'right') moveItem(i, i + 1);
+});
+
+$('#drop').onclick = () => $('#file').click();
+$('#drop').onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') $('#file').click(); };
+$('#addBtn').onclick = () => $('#file').click();
+$('#file').onchange = e => { addFiles(e.target.files); e.target.value = ''; };
+
+$('#sortBtn').onclick = () => {
+  state.items.sort((a,b) => a.name.localeCompare(b.name, undefined, { numeric:true }));
+  render();
+};
+
+$('#clearBtn').onclick = () => {
+  if (!state.items.length) return;
+  state.items.forEach(i => URL.revokeObjectURL(i.url));
+  state.items = [];
+  state.selId = null;
+  render();
+};
+
+$('#download').onclick = download;
+
+let depth = 0;
+['dragenter','dragover'].forEach(t => window.addEventListener(t, e => {
+  if (!e.dataTransfer || ![...e.dataTransfer.types].includes('Files')) return;
+  e.preventDefault();
+  if (t === 'dragenter') depth++;
+  $('#drop').classList.add('hot');
+}));
+
+window.addEventListener('dragleave', () => {
+  if (--depth <= 0) {
+    depth = 0;
+    $('#drop').classList.remove('hot');
+  }
+});
+
+window.addEventListener('drop', e => {
+  if (!e.dataTransfer?.files?.length) return;
+  e.preventDefault();
+  depth = 0;
+  $('#drop').classList.remove('hot');
+  addFiles(e.dataTransfer.files);
+});
+
+function syncUI() {
+  const c = state.cfg;
+
+  $('#size').value = c.size;
+  $('#orient').value = c.orient;
+  $('#mode').value = c.mode;
+  $('#margin').value = c.margin;
+  $('#quality').value = c.quality;
+  $('#numbering').checked = !!c.numbering;
+
+  $('#marginVal').textContent = c.margin + ' mm';
+  $('#qVal').textContent = c.quality + '%';
+  $('#paperInfo').textContent = c.size === 'Original' ? 'Original' : c.size + (c.orient === 'landscape' ? ' L' : ' P');
+
+  document.body.classList.toggle('original', c.size === 'Original');
+}
+
+function changed(reencode = true) {
+  save();
+  syncUI();
+  if (reencode) {
+    invalidate();
+    schedule();
+  } else {
+    preview();
+    status();
+  }
+}
+
+$('#size').onchange = e => { state.cfg.size = e.target.value; changed(); };
+$('#orient').onchange = e => { state.cfg.orient = e.target.value; changed(); };
+$('#mode').onchange = e => { state.cfg.mode = e.target.value; changed(); };
+$('#margin').oninput = e => {
+  state.cfg.margin = +e.target.value;
+  $('#marginVal').textContent = state.cfg.margin + ' mm';
+  changed();
+};
+$('#quality').oninput = e => {
+  state.cfg.quality = +e.target.value;
+  $('#qVal').textContent = state.cfg.quality + '%';
+  changed();
+};
+$('#numbering').onchange = e => { state.cfg.numbering = e.target.checked; changed(false); };
+
+syncUI();
+render();
+})();
+</script>
+
+<script>
+(function () {
+  const isField = el => {
+    const t = el && el.tagName ? el.tagName.toUpperCase() : "";
+    return t === "INPUT" || t === "TEXTAREA" || t === "SELECT";
+  };
+
+  document.addEventListener("contextmenu", e => {
+    e.preventDefault();
+    e.stopPropagation();
+  }, true);
+
+  document.addEventListener("keydown", e => {
+    const k = (e.key || "").toLowerCase();
+    const ctrl = e.ctrlKey;
+    const shift = e.shiftKey;
+    const meta = e.metaKey;
+    const alt = e.altKey;
+
+    if (
+      e.key === "F12" ||
+      (ctrl && shift && ["i", "j", "c", "k", "e"].includes(k)) ||
+      (meta && alt && ["i", "j", "c", "k", "u"].includes(k)) ||
+      (ctrl && k === "u")
+    ) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }, true);
+
+  document.addEventListener("selectstart", e => {
+    if (!isField(e.target)) e.preventDefault();
+  }, true);
+
+  document.addEventListener("dragstart", e => {
+    if (!isField(e.target)) e.preventDefault();
+  }, true);
+
+  document.addEventListener("copy", e => {
+    if (!isField(e.target)) e.preventDefault();
+  }, true);
+})();
+</script>
+</body>
+</html>
